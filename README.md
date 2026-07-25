@@ -1,8 +1,12 @@
 # Hydrogel Simulator (Android · Java · Firebase · Groq AI)
 
-A research/educational Android app that **predicts the behaviour of
+🌐 **Live Web Application (Vercel):** [https://webapp-mu-pied.vercel.app/](https://webapp-mu-pied.vercel.app/)  
+🔗 **GitHub Pages Deployment:** [https://padaladeepthipravallika.github.io/app/](https://padaladeepthipravallika.github.io/app/)
+
+A research/educational Android & Web app that **predicts the behaviour of
 genipin-crosslinked gelatin hydrogels** for wound healing and tissue
 engineering.
+
 
 ## Features
 
