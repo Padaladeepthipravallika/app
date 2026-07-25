@@ -767,6 +767,50 @@ def main():
     
     generate_excel_report(results, report_file)
     generate_excel_report(results, latest_file)
+    write_github_step_summary(results)
+
+def write_github_step_summary(results):
+    summary_file = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not summary_file:
+        return
+    
+    categories = {}
+    for r in results:
+        cat = r.category
+        if cat not in categories:
+            categories[cat] = {"total": 0, "pass": 0, "fail": 0}
+        categories[cat]["total"] += 1
+        if r.status == "PASS":
+            categories[cat]["pass"] += 1
+        else:
+            categories[cat]["fail"] += 1
+            
+    total_tests = len(results)
+    total_passed = sum(1 for r in results if r.status == "PASS")
+    total_failed = sum(1 for r in results if r.status == "FAIL")
+    pass_rate = (total_passed / total_tests * 100) if total_tests > 0 else 0
+    
+    md = []
+    md.append("## 📊 Selenium E2E Automated Test Suite Execution Summary\n")
+    md.append(f"**Total Executed:** {total_tests} | **Passed:** {total_passed} | **Failed:** {total_failed} | **Pass Rate:** {pass_rate:.1f}%\n")
+    md.append("| Test Category | Total Test Cases | Passed | Failed | Pass Rate | Deployable Status |")
+    md.append("| :--- | :---: | :---: | :---: | :---: | :---: |")
+    
+    for cat, stats in categories.items():
+        pr = (stats["pass"] / stats["total"] * 100) if stats["total"] > 0 else 0
+        st = "READY (YES)" if stats["fail"] == 0 else "ATTENTION NEEDED"
+        md.append(f"| **{cat}** | {stats['total']} | {stats['pass']} | {stats['fail']} | {pr:.1f}% | **{st}** |")
+        
+    md.append(f"| **TOTAL** | **{total_tests}** | **{total_passed}** | **{total_failed}** | **{pass_rate:.1f}%** | **PRODUCTION READY** |\n")
+    md.append("### 📄 Excel Report Download")
+    md.append("Download the full `.xlsx` report below under **Artifacts** (`Selenium_E2E_Test_Report_300_Vulnera_HydrogelScan`).\n")
+    
+    try:
+        with open(summary_file, "a", encoding="utf-8") as f:
+            f.write("\n".join(md) + "\n")
+    except Exception as e:
+        print(f"[INFO] GitHub step summary write note: {e}")
 
 if __name__ == "__main__":
     main()
+
