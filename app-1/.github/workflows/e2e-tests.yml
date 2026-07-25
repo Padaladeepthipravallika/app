@@ -1,0 +1,43 @@
+name: Selenium E2E Automated Test Suite & Excel Report (300+ Test Cases)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  e2e-tests:
+    name: Run 300+ Selenium E2E Tests & Generate Excel Report
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Google Chrome & ChromeDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget curl unzip libxi6 libgconf-2-4 libnss3 chromium-browser
+
+      - name: Install Python Test Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f web_app/tests/requirements.txt ]; then pip install -r web_app/tests/requirements.txt; else pip install selenium openpyxl webdriver-manager; fi
+
+      - name: Execute 300+ Selenium E2E Test Suite
+        run: |
+          python web_app/tests/run_e2e_tests.py --headless
+
+      - name: Upload Excel Test Report Artifact (.xlsx)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Selenium_E2E_Test_Report_300_Vulnera_HydrogelScan
+          path: web_app/reports/*.xlsx
+          retention-days: 90

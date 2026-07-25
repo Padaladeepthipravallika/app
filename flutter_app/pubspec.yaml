@@ -1,0 +1,47 @@
+name: hydrogel_simulator
+description: Predicts behaviour of genipin-crosslinked gelatin hydrogels (Flutter port).
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+
+  # Firebase
+  firebase_core: ^3.6.0
+  cloud_firestore: ^5.4.4
+
+  # HTTP (Groq API)
+  http: ^1.2.2
+
+  # Charts
+  fl_chart: ^0.69.0
+
+  # 3D model (reuses the existing three.js HTML asset)
+  webview_flutter: ^4.10.0
+  webview_flutter_android: ^4.0.0
+
+  # PDF report
+  pdf: ^3.11.1
+  printing: ^5.13.4
+  share_plus: ^10.0.2
+  path_provider: ^2.1.4
+
+  # Env / secrets
+  flutter_dotenv: ^5.1.0
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/hydrogel3d.html
+    - .env

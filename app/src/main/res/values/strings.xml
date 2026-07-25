@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Hydrogel Simulator</string>
+    <!-- Replace with your real Groq API key (keep it server-side in production) -->
+    <string name="groq_api_key">YOUR_GROQ_API_KEY_HERE</string>
+</resources>

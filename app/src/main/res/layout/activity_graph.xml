@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView android:text="Strength vs Genipin Concentration"
+            android:textStyle="bold" android:textSize="16sp" android:textColor="@color/primaryDark"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chartStrength"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginBottom="20dp"/>
+
+        <TextView android:text="Degradation vs Time"
+            android:textStyle="bold" android:textSize="16sp" android:textColor="@color/primaryDark"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chartDegradation"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginBottom="20dp"/>
+
+        <TextView android:text="Swelling vs pH"
+            android:textStyle="bold" android:textSize="16sp" android:textColor="@color/primaryDark"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chartSwelling"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"/>
+    </LinearLayout>
+</ScrollView>

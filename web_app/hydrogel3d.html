@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Hydrogel 3D Model</title>
+<style>
+  html,body{margin:0;height:100%;background:#0b1020;color:#fff;font-family:sans-serif;overflow:hidden}
+  #legend{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.45);padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.5}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+</style>
+</head>
+<body>
+<div id="legend">
+  <div><span class="dot" style="background:#26a69a"></span>Gelatin chain residue</div>
+  <div><span class="dot" style="background:#ffca28"></span>Genipin crosslink</div>
+  <div style="margin-top:4px;opacity:.7">Drag to rotate</div>
+</div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0b1020);
+
+const cam = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
+cam.position.set(0, 0, 18);
+
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth, innerHeight);
+document.body.appendChild(renderer.domElement);
+
+const controls = new OrbitControls(cam, renderer.domElement);
+controls.enableDamping = true;
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+const dir = new THREE.DirectionalLight(0xffffff, 0.9);
+dir.position.set(5,10,7); scene.add(dir);
+
+const N = 6, S = 2.2;
+const residueGeo = new THREE.SphereGeometry(0.35, 16, 16);
+const residueMat = new THREE.MeshPhongMaterial({color:0x26a69a});
+const xlinkGeo  = new THREE.SphereGeometry(0.28, 12, 12);
+const xlinkMat  = new THREE.MeshPhongMaterial({color:0xffca28, emissive:0x553a00});
+const bondMat   = new THREE.LineBasicMaterial({color:0x90a4ae});
+const xMat      = new THREE.LineBasicMaterial({color:0xffca28});
+
+const positions = [];
+for (let i=0;i<N;i++)
+ for (let j=0;j<N;j++)
+  for (let k=0;k<N;k++){
+    const p = new THREE.Vector3((i-N/2)*S, (j-N/2)*S, (k-N/2)*S);
+    p.x += (Math.random()-.5)*0.5;
+    p.y += (Math.random()-.5)*0.5;
+    p.z += (Math.random()-.5)*0.5;
+    positions.push(p);
+    const m = new THREE.Mesh(residueGeo, residueMat);
+    m.position.copy(p); scene.add(m);
+  }
+
+function bond(a,b,mat){
+  const g = new THREE.BufferGeometry().setFromPoints([a,b]);
+  scene.add(new THREE.Line(g, mat));
+}
+for (let i=0;i<positions.length-1;i++){
+  if ((i+1) % N !== 0) bond(positions[i], positions[i+1], bondMat);
+}
+
+for (let n=0;n<60;n++){
+  const a = positions[Math.floor(Math.random()*positions.length)];
+  const b = positions[Math.floor(Math.random()*positions.length)];
+  if (a.distanceTo(b) < 4 && a.distanceTo(b) > 1.2){
+    bond(a,b,xMat);
+    const mid = a.clone().add(b).multiplyScalar(0.5);
+    const x = new THREE.Mesh(xlinkGeo, xlinkMat);
+    x.position.copy(mid); scene.add(x);
+  }
+}
+
+addEventListener('resize', ()=>{
+  cam.aspect = innerWidth/innerHeight; cam.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+(function loop(){
+  requestAnimationFrame(loop);
+  scene.rotation.y += 0.002;
+  controls.update();
+  renderer.render(scene, cam);
+})();
+</script>
+</body>
+</html>
