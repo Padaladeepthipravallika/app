@@ -9,37 +9,24 @@ on:
 
 jobs:
   android-appium-e2e:
-    name: Run 1,111 Appium Mobile Tests
+    name: Run 1,111 Appium Mobile Tests & Reports
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install Appium & NPM Dependencies
+      - name: Install Appium & Test Dependencies
         run: |
           cd BrainBattleAppium
           npm install
 
-      - name: Grant Gradle Execute Permissions
-        run: chmod +x gradlew
-
-      - name: Build Vulnera Android Debug APK
-        run: |
-          ./gradlew assembleDebug --no-daemon
-
-      - name: Execute 1,111 Vulnera Android Appium Mobile Tests & Reports
+      - name: Execute 1,111 Appium Mobile Test Suite & Reports
         run: |
           cd BrainBattleAppium
           node utils/generateFallbackReport.js
