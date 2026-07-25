@@ -1,10 +1,21 @@
 import https from "https";
 
 export default async function handler(req, res) {
+  // CORS Headers for GitHub Pages & cross-origin requests
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== "POST") {
     res.status(405).json({ error: "Method not allowed" });
     return;
   }
+
 
   // Keep only printable ASCII (32-126) to strip any BOM or invisible chars
   const raw = process.env.GROQ_API_KEY || "";

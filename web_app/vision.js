@@ -3,7 +3,10 @@
 // Uses a vision-capable Groq model. We force a JSON-only response so the UI
 // can render it reliably.
 
-const ENDPOINT = "/api/groq";
+const ENDPOINT = (typeof window !== "undefined" && (window.location.hostname.includes("github.io") || window.location.protocol === "file:"))
+  ? "https://webapp-mu-pied.vercel.app/api/groq"
+  : "/api/groq";
+
 const VISION_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct";
 
 const SYSTEM_PROMPT = `You are a wound-care educational assistant.

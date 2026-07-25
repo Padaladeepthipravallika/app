@@ -1,4 +1,7 @@
-const ENDPOINT = "/api/groq";
+const ENDPOINT = (typeof window !== "undefined" && (window.location.hostname.includes("github.io") || window.location.protocol === "file:"))
+  ? "https://webapp-mu-pied.vercel.app/api/groq"
+  : "/api/groq";
+
 const MODEL = "llama-3.1-8b-instant";
 
 export async function analyzeWithGroq(prompt) {
