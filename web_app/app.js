@@ -517,3 +517,36 @@ $("hg-reset").addEventListener("click", () => {
   $("hg-ph").value = 7.4;  $("hg-temp").value = 37;
 });
 $("hg-pdf").addEventListener("click", () => window.print());
+
+// Prevent all zoom-in and zoom-out behaviors (gestures, pinch, double-tap, hotkeys, wheel)
+["gesturestart", "gesturechange", "gestureend"].forEach((evt) => {
+  document.addEventListener(evt, (e) => e.preventDefault(), { passive: false });
+});
+
+document.addEventListener("touchmove", (e) => {
+  if (e.touches && e.touches.length > 1) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+let lastTouchEnd = 0;
+document.addEventListener("touchend", (e) => {
+  const now = Date.now();
+  if (now - lastTouchEnd <= 300) {
+    e.preventDefault();
+  }
+  lastTouchEnd = now;
+}, { passive: false });
+
+document.addEventListener("wheel", (e) => {
+  if (e.ctrlKey || e.metaKey) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+document.addEventListener("keydown", (e) => {
+  if ((e.ctrlKey || e.metaKey) && (e.key === "+" || e.key === "-" || e.key === "=" || e.key === "0")) {
+    e.preventDefault();
+  }
+});
+

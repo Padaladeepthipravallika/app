@@ -53,8 +53,14 @@ html, body {
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }
-button, input { font-family: inherit; }
+button, input, select, textarea {
+  font-family: inherit;
+  touch-action: manipulation;
+}
 h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -0.01em; }
 
 /* ---------- Layout ---------- */
@@ -251,16 +257,17 @@ h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -0.01em; }
   font-size: 12px; font-weight: 500; color: var(--text-muted);
   text-transform: uppercase; letter-spacing: .04em;
 }
-input[type=number], input[type=text], input[type=email], input[type=password] {
+input[type=number], input[type=text], input[type=email], input[type=password], input[type=search], input[type=tel], input[type=url], textarea, select {
   width: 100%;
   background: var(--surface);
   color: var(--text);
   border: 1.5px solid var(--border);
   border-radius: 10px;
   padding: 10px 12px;
-  font-size: 14px;
+  font-size: 16px; /* Minimum 16px prevents iOS Safari auto-zoom on input focus */
   outline: none;
   transition: all .2s;
+  touch-action: manipulation;
 }
 input:focus {
   border-color: var(--primary);
