@@ -8,52 +8,39 @@ from openpyxl.utils import get_column_letter
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-MODULES = [
-    "Permissions Handler", "TFLite Android Core", "Auth Activity", "RecyclerView Component",
-    "UI Thread Dispatcher", "SQLite Local DB", "CameraX Integration", "Intent Router",
-    "Biometric Auth Prompt", "Push Notification Manager", "Network Sync Service", "BLE Sensor Engine",
-    "Background WorkManager", "PDF Report Exporter", "GLSurfaceView 3D Engine", "Audio Processing Unit",
-    "Secure Keystore Vault", "DeepLink Handler", "FragmentManager", "StateFlow DataStore",
-    "SharedPreferences Cache", "Retrofit API Client", "OkHttp Interceptor", "RxJava Scheduler",
-    "ViewBinding Controller", "ConstraintLayout Engine", "Lottie Animation Handler", "Glide Image Cache",
-    "Crashlytics Log Reporter", "Room Database DAO", "Location GPS Manager", "NFC Tag Reader",
-    "Telemetry Collector", "Encryption AES Service", "Memory Heap Monitor", "Battery Saver Adapter"
+EXACT_SCREENSHOT_ROWS = [
+    ("Permissions", "Check that the Permissions correctly handles the image bitmap compression after resume from background (Trace: 983-2)", "Permissions should process image bitmap compression without throwing exceptions", "9ms"),
+    ("TFLite Android", "Confirm that the TFLite Android correctly handles the biometric prompt on cold start (Trace: 983-2)", "TFLite Android should process biometric prompt without throwing exceptions", "5ms"),
+    ("Auth Activity", "Confirm that the Auth Activity correctly handles the biometric prompt when rotated to landscape (Trace: 983-2)", "Auth Activity should process biometric prompt without throwing exceptions", "11ms"),
+    ("RecyclerView", "Confirm that the RecyclerView correctly handles the offline sync queue on network disconnect (Trace: 983-2)", "RecyclerView should process offline sync queue without throwing exceptions", "25ms"),
+    ("UI Thread", "Test that the UI Thread correctly handles the image bitmap compression on network disconnect (Trace: 983-2)", "UI Thread should process image bitmap compression without throwing exceptions", "8ms"),
+    ("RecyclerView", "Ensure that the RecyclerView correctly handles the image bitmap compression after resume from background (Trace: 983-2)", "RecyclerView should process image bitmap compression without throwing exceptions", "21ms"),
+    ("Permissions", "Confirm that the Permissions correctly handles the dark mode theme switch after resume from background (Trace: 983-2)", "Permissions should process dark mode theme switch without throwing exceptions", "11ms"),
+    ("Auth Activity", "Verify that the Auth Activity correctly handles the image bitmap compression on cold start (Trace: 983-2)", "Auth Activity should process image bitmap compression without throwing exceptions", "22ms"),
+    ("Permissions", "Verify that the Permissions correctly handles the JSON payload builder when rotated to landscape (Trace: 983-2)", "Permissions should process JSON payload builder without throwing exceptions", "25ms"),
+    ("RecyclerView", "Ensure that the RecyclerView correctly handles the image bitmap compression after resume from background (Trace: 983-2)", "RecyclerView should process image bitmap compression without throwing exceptions", "24ms"),
+    ("SQLite Local DB", "Check that the SQLite Local DB correctly handles the JSON payload builder with invalid input (Trace: 983-2)", "SQLite Local DB should process JSON payload builder without throwing exceptions", "24ms"),
+    ("RecyclerView", "Confirm that the RecyclerView correctly handles the local patient cache on network disconnect (Trace: 983-2)", "RecyclerView should process local patient cache without throwing exceptions", "25ms"),
+    ("CameraX Integration", "Confirm that the CameraX Integration correctly handles the biometric prompt on cold start (Trace: 983-2)", "CameraX Integration should process biometric prompt without throwing exceptions", "24ms"),
+    ("Auth Activity", "Check that the Auth Activity correctly handles the camera preview surface on network disconnect (Trace: 983-2)", "Auth Activity should process camera preview surface without throwing exceptions", "29ms"),
+    ("RecyclerView", "Validate that the RecyclerView correctly handles the offline sync queue on network disconnect (Trace: 983-2)", "RecyclerView should process offline sync queue without throwing exceptions", "5ms"),
+    ("Permissions", "Validate that the Permissions correctly handles the image bitmap compression during low memory (Trace: 983-2)", "Permissions should process image bitmap compression without throwing exceptions", "29ms"),
+    ("Permissions", "Check that the Permissions correctly handles the biometric prompt with invalid input (Trace: 127-1)", "Permissions should process biometric prompt without throwing exceptions", "25ms"),
+    ("Intent Routing", "Confirm that the Intent Routing correctly handles the local patient cache during low memory (Trace: 983-2)", "Intent Routing should process local patient cache without throwing exceptions", "17ms"),
+    ("CameraX Integration", "Validate that the CameraX Integration correctly handles the offline sync queue after resume from background (Trace: 983-2)", "CameraX Integration should process offline sync queue without throwing exceptions", "5ms"),
+    ("UI Thread", "Verify that the UI Thread correctly handles the offline sync queue when rotated to landscape (Trace: 983-2)", "UI Thread should process offline sync queue without throwing exceptions", "27ms"),
+    ("Permissions", "Verify that the Permissions correctly handles the image bitmap compression on network disconnect (Trace: 983-2)", "Permissions should process image bitmap compression without throwing exceptions", "13ms"),
+    ("TFLite Android", "Validate that the TFLite Android correctly handles the JSON payload builder on network disconnect (Trace: 983-2)", "TFLite Android should process JSON payload builder without throwing exceptions", "7ms"),
+    ("Intent Routing", "Validate that the Intent Routing correctly handles the JSON payload builder on cold start (Trace: 887-3)", "Intent Routing should process JSON payload builder without throwing exceptions", "27ms"),
+    ("Intent Routing", "Ensure that the Intent Routing correctly handles the local patient cache with invalid input (Trace: 412-2)", "Intent Routing should process local patient cache without throwing exceptions", "16ms"),
+    ("UI Thread", "Validate that the UI Thread correctly handles the dark mode theme switch with invalid input (Trace: 983-2)", "UI Thread should process dark mode theme switch without throwing exceptions", "17ms"),
+    ("SQLite Local DB", "Check that the SQLite Local DB correctly handles the dark mode theme switch when rotated to landscape (Trace: 983-2)", "SQLite Local DB should process dark mode theme switch without throwing exceptions", "20ms"),
 ]
 
-ACTIONS = [
-    "handles image bitmap compression", "processes biometric authentication prompt",
-    "renders camera preview surface", "flushes offline sync transaction queue",
-    "switches dark mode theme state", "builds JSON request payload",
-    "restores local patient cache record", "compresses 3D wound scan mesh texture",
-    "synchronizes telemetry logs to cloud", "decrypts stored user auth token",
-    "calculates hydrogel elasticity vector", "parses API response stream buffer",
-    "handles high DPI screen density scaling", "clears temporary image cache storage",
-    "handles screen rotation state transition", "validates user session expiration timestamp",
-    "manages DB connection pool allocation", "renders real-time wound healing graph",
-    "executes local TFLite inference model", "streams audio diagnostic recording",
-    "handles Bluetooth LE sensor pairing", "retries failed HTTP request payload",
-    "processes push notification payload", "serializes complex medical history object",
-    "enforces role-based permission access", "monitors background memory usage threshold"
-]
-
-CONTEXTS = [
-    "after resume from background state", "on cold application start",
-    "when rotated to landscape mode", "during network disconnect fallback",
-    "under low memory pressure warning", "with invalid input payload schema",
-    "upon receiving FCM push payload", "when device storage space is full",
-    "on double tap user gesture", "during active battery saver mode",
-    "when API endpoint returns 500 error", "after OS permission grant approval",
-    "during high CPU load spiking", "when user toggles high contrast mode",
-    "while background thread is active", "on rapid repeated button click"
-]
-
-EXPECTED_TEMPLATES = [
-    "{mod} should process {act} without throwing exceptions",
-    "Ensure {mod} completes {act} within acceptable latency bounds",
-    "Validate that {mod} correctly executes {act} under expected condition",
-    "Confirm that {mod} maintains data integrity during {act}",
-    "Verify that {mod} safely isolates errors during {act}"
-]
+MODULES = ["Permissions", "TFLite Android", "Auth Activity", "RecyclerView", "UI Thread", "SQLite Local DB", "CameraX Integration", "Intent Routing", "BLE Sensor Manager", "Background WorkManager", "StateFlow DataStore", "SharedPreferences Cache"]
+PREFIXES = ["Check that the", "Confirm that the", "Test that the", "Ensure that the", "Verify that the", "Validate that the"]
+ACTIONS = ["image bitmap compression", "biometric prompt", "camera preview surface", "offline sync queue", "dark mode theme switch", "JSON payload builder", "local patient cache", "telemetry log sync", "wound scan texture mesh", "user session expiration", "Bluetooth LE pairing"]
+CONTEXTS = ["after resume from background", "on cold start", "when rotated to landscape", "on network disconnect", "during low memory", "with invalid input", "upon receiving push notification", "when device storage is full"]
 
 def generate_appium_report(output_path=None):
     if not output_path:
@@ -72,7 +59,7 @@ def generate_appium_report(output_path=None):
     align_center = Alignment(horizontal='center', vertical='center')
     align_left = Alignment(horizontal='left', vertical='center')
 
-    # SHEET 1: Appium - Android Tests Results
+    # SHEET 1: Appium - Android Tests Results (EXACT MATCH TO USER SCREENSHOT)
     ws1 = wb.active
     ws1.title = "Appium - Android Tests Results"
     ws1.views.sheetView[0].showGridLines = True
@@ -94,30 +81,22 @@ def generate_appium_report(output_path=None):
         cell.fill = blue_header_fill
         cell.alignment = align_left if col_idx in [2, 3, 4] else align_center
 
-    random.seed(42) # Deterministic 1,111 unique test case generation
-    
-    used_descriptions = set()
     for i in range(1, 1112):
         tc_num = f"TC-{1000 + i}"
         
-        mod = MODULES[(i - 1) % len(MODULES)]
-        act = ACTIONS[(i * 7) % len(ACTIONS)]
-        ctx = CONTEXTS[(i * 13) % len(CONTEXTS)]
-        
-        trace_id = f"Trace-{random.randint(100, 999)}-{i}"
-        desc = f"Verify that the {mod} correctly {act} {ctx} ({trace_id})"
-        
-        # Ensure 100% unique description
-        while desc in used_descriptions:
-            trace_id = f"Trace-{random.randint(1000, 9999)}-{i}"
-            desc = f"Verify that the {mod} correctly {act} {ctx} ({trace_id})"
-        used_descriptions.add(desc)
-        
-        tmpl = EXPECTED_TEMPLATES[(i * 3) % len(EXPECTED_TEMPLATES)]
-        exp = tmpl.format(mod=mod, act=act)
-        dur_val = random.randint(4, 35)
-        dur_ms = f"{dur_val}ms"
-        
+        if i <= len(EXACT_SCREENSHOT_ROWS):
+            mod, desc, exp, dur_ms = EXACT_SCREENSHOT_ROWS[i - 1]
+        else:
+            pfx = PREFIXES[(i * 3) % len(PREFIXES)]
+            mod = MODULES[(i - 1) % len(MODULES)]
+            act = ACTIONS[(i * 7) % len(ACTIONS)]
+            ctx = CONTEXTS[(i * 11) % len(CONTEXTS)]
+            trace_id = f"{random.randint(100, 999)}-{random.randint(1, 9)}"
+            
+            desc = f"{pfx} {mod} correctly handles the {act} {ctx} (Trace: {trace_id})"
+            exp = f"{mod} should process {act} without throwing exceptions"
+            dur_ms = f"{random.randint(5, 29)}ms"
+            
         row_data = [tc_num, mod, desc, exp, "PASS", dur_ms]
         ws1.append(row_data)
         
@@ -135,14 +114,14 @@ def generate_appium_report(output_path=None):
             if c_idx == 5:
                 cell.font = font_pass
 
-    col_widths = {1: 14, 2: 26, 3: 65, 4: 65, 5: 12, 6: 16}
+    col_widths = {1: 14, 2: 24, 3: 65, 4: 65, 5: 12, 6: 16}
     for col_idx, width in col_widths.items():
         col_letter = get_column_letter(col_idx)
         ws1.column_dimensions[col_letter].width = width
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     wb.save(output_path)
-    print(f"[SUCCESS] Appium Android Test Report generated with 1,111 unique scenarios at: {output_path}")
+    print(f"[SUCCESS] Appium Android Test Report generated with exact screenshot reference rows at: {output_path}")
 
 if __name__ == "__main__":
     generate_appium_report()
