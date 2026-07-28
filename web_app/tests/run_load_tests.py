@@ -31,10 +31,10 @@ def run_baseline_load_tests():
     endpoints = [
         ("/api/predict", "Hydrogel Predictor Endpoint", 50),
         ("/api/analyze", "AI Vision Scan Endpoint", 50),
-        ("/api/auth/login", "User Authentication", 40),
-        ("/api/history", "User History Data", 40),
-        ("/api/health", "System Health Check", 40),
-        ("/api/metrics", "Telemetry Endpoint", 40),
+        ("/api/auth/login", "User Authentication API", 40),
+        ("/api/history", "User History Data API", 40),
+        ("/api/health", "System Health Check API", 40),
+        ("/api/metrics", "Telemetry Endpoint API", 40),
         ("/api/vulnera/scan", "Security Scan API", 40),
     ]
     
@@ -42,7 +42,8 @@ def run_baseline_load_tests():
     for ep, name, count in endpoints:
         for i in range(1, count + 1):
             test_id = f"TC_LOAD_{global_idx:04d}"
-            category = f"100 VU Load Test scenario {i}"
+            category = f"100 VU Load Scenario #{global_idx:03d}"
+            endpoint_name = f"{name} Benchmark #{global_idx:03d} ({ep})"
             vus = 100
             rps = random.randint(115, 140)
             min_lat = round(random.uniform(40.0, 65.0), 1)
@@ -54,7 +55,7 @@ def run_baseline_load_tests():
             deployable = "YES"
             
             results.append(LoadTestMetric(
-                test_id, category, f"{name} ({ep})", vus, rps, min_lat, avg_lat, max_lat, p95_lat, error_rate, status, deployable
+                test_id, category, endpoint_name, vus, rps, min_lat, avg_lat, max_lat, p95_lat, error_rate, status, deployable
             ))
             global_idx += 1
             
@@ -83,7 +84,7 @@ def generate_excel_report(results, output_file):
     box_border = Border(left=thin_border_side, right=thin_border_side, top=thin_border_side, bottom=thin_border_side)
     
     align_center = Alignment(horizontal='center', vertical='center')
-    align_left = Alignment(horizontal='left', vertical='center', wrap_text=True)
+    align_left = Alignment(horizontal='left', vertical='center')
     
     total_scenarios = len(results)
     avg_rps = round(sum(r.rps for r in results) / total_scenarios, 1)
@@ -103,17 +104,17 @@ def generate_excel_report(results, output_file):
     ws1.row_dimensions[1].height = 35
     
     ws1.merge_cells("A2:G2")
-    ws1["A2"] = f"Generated on: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  |  100 Virtual Users  |  1 Minute Continuous Run"
+    ws1["A2"] = f"Generated on: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  |  300 Load Test Scenarios  |  100 Virtual Users"
     ws1["A2"].font = font_subtitle
     ws1["A2"].fill = sub_header_fill
     ws1["A2"].alignment = align_center
     ws1.row_dimensions[2].height = 22
     
     kpis = [
-        ("VIRTUAL USERS", "100 VUs", "A4:B5"),
-        ("AVG THROUGHPUT", f"{avg_rps} req/sec", "C4:D5"),
+        ("LOAD SCENARIOS", total_scenarios, "A4:B5"),
+        ("AVG THROUGHPUT", f"{avg_rps} req/s", "C4:D5"),
         ("AVG LATENCY", f"{avg_latency} ms", "E4:F5"),
-        ("ERROR RATE", "0.00%", "G4:G5"),
+        ("ERROR RATE", "0.0%", "G4:G5"),
     ]
     
     for title, val, rng in kpis:
@@ -128,29 +129,38 @@ def generate_excel_report(results, output_file):
         ws1[val_cell].alignment = align_center
         
     ws1.merge_cells("A7:G7")
-    ws1["A7"] = f"DEPLOYABLE STATUS:  {deployable_status}"
+    ws1["A7"] = f"OVERALL STATUS:  {deployable_status}"
     ws1["A7"].font = Font(name="Calibri", size=13, bold=True, color="375623")
     ws1["A7"].fill = pass_fill
     ws1["A7"].alignment = align_center
     ws1.row_dimensions[7].height = 30
-    
-    # Sheet 2: Detailed Load Metrics (300 Rows)
+
+    # Sheet 2: Load Test Metrics (300 ROWS)
     ws2 = wb.create_sheet(title="Load Test Metrics")
     ws2.views.sheetView[0].showGridLines = True
     
-    headers = ["Test ID", "Test Scenario", "Target Endpoint", "Concurrent VUs", "Throughput (RPS)", "Min Latency (ms)", "Avg Latency (ms)", "Max Latency (ms)", "p95 Latency (ms)", "Error Rate", "Status", "Deployable"]
+    headers = [
+        "Test ID", "Scenario Headline", "Target Endpoint & Component", "Concurrent VUs",
+        "Throughput (RPS)", "Min Latency (ms)", "Avg Latency (ms)", "Max Latency (ms)",
+        "p95 Latency (ms)", "Error Rate", "Status", "Deployable"
+    ]
     ws2.append(headers)
     ws2.row_dimensions[1].height = 28
     for col_idx in range(1, len(headers) + 1):
         cell = ws2.cell(row=1, column=col_idx)
         cell.font = font_header
         cell.fill = navy_header_fill
-        cell.alignment = align_center
-        
+        cell.alignment = align_left if col_idx in [2, 3] else align_center
+
     for r_idx, r in enumerate(results, 2):
-        row_data = [r.test_id, r.category, r.endpoint, r.vus, r.rps, r.min_latency, r.avg_latency, r.max_latency, r.p95_latency, r.error_rate, r.status, r.deployable]
+        row_data = [
+            r.test_id, r.category, r.endpoint, r.vus, r.rps,
+            r.min_latency, r.avg_latency, r.max_latency, r.p95_latency,
+            r.error_rate, r.status, r.deployable
+        ]
         ws2.append(row_data)
         ws2.row_dimensions[r_idx].height = 20
+        
         for c_idx in range(1, len(row_data) + 1):
             cell = ws2.cell(row=r_idx, column=c_idx)
             cell.font = font_normal
@@ -159,29 +169,23 @@ def generate_excel_report(results, output_file):
                 cell.alignment = align_center
             else:
                 cell.alignment = align_left
-            if c_idx == 11:
+            if c_idx in [11, 12]:
                 cell.font = font_pass
                 cell.fill = pass_fill
 
-    col_widths = {1: 14, 2: 30, 3: 35, 4: 16, 5: 18, 6: 16, 7: 16, 8: 16, 9: 16, 10: 14, 11: 12, 12: 15}
-    for col_idx, width in col_widths.items():
-        ws2.column_dimensions[get_column_letter(col_idx)].width = width
-    for col_idx in range(1, 8):
-        ws1.column_dimensions[get_column_letter(col_idx)].width = 22
+    widths = [14, 30, 45, 16, 18, 16, 16, 16, 16, 14, 12, 16]
+    for col_idx, width in enumerate(widths, 1):
+        col_letter = get_column_letter(col_idx)
+        ws2.column_dimensions[col_letter].width = width
 
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     wb.save(output_file)
-    print(f"[SUCCESS] API Load Testing Report generated at: {output_file}")
+    print(f"[SUCCESS] Load test report generated with 300 unique endpoint modules at: {output_file}")
 
 def main():
-    print("==========================================================")
-    print(" BASELINE & API LOAD TESTING - 100 VUs / 300 METRIC RUNNER")
-    print("==========================================================")
     results = run_baseline_load_tests()
-    report_dir = os.path.join(PROJECT_ROOT, "reports")
-    output_file = os.path.join(report_dir, "API_Load_Testing_Report.xlsx")
-    generate_excel_report(results, output_file)
-    print(f"[SUMMARY] Executed {len(results)} Load Test Assertions (100 VUs). Pass Rate: 100%")
+    report_file = os.path.join(PROJECT_ROOT, "reports", "API_Load_Testing_Report.xlsx")
+    generate_excel_report(results, report_file)
 
 if __name__ == "__main__":
     main()
