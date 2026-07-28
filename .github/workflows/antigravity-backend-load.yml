@@ -1,0 +1,39 @@
+name: AntiGravity Healthcare AI — 300 Backend Load Test Suite
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  antigravity-backend-load-tests:
+    name: Run 300 Backend Load Tests (50 to 10,000 VUs)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python Test Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r web_app/tests/requirements.txt
+
+      - name: Execute AntiGravity 300 Backend Load Test Suite
+        run: |
+          python web_app/tests/run_antigravity_load_tests.py
+
+      - name: Upload AntiGravity 300 Backend Load Test Excel Report (.xlsx)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AntiGravity_300_Backend_Load_Test_Report
+          path: web_app/reports/AntiGravity_300_Backend_Load_Test_Report.xlsx
+          retention-days: 90
