@@ -220,7 +220,7 @@ def run_all_tests(driver):
         t0 = time.time()
         act = exp
         time_taken = time.time() - t0 + 0.003
-        results.append(TestResult(tc_id, "Functional Testing", module, desc, steps, exp, act, time_taken, sev, status, "YES"))
+        results.append(TestResult(tc_id, "Development Testing", module, desc, steps, exp, act, time_taken, sev, status, "YES"))
 
     # ---------------------------------------------------------
     # CATEGORY 3: UNIT TESTING (300 UNIQUE TEST CASES)
@@ -458,7 +458,7 @@ def generate_excel_report(results, output_file):
     
     categories = [
         "UI/UX Testing",
-        "Functional Testing",
+        "Development Testing",
         "Unit Testing",
         "Validation Testing",
         "Vulnerability & Security",
