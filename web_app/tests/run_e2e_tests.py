@@ -395,7 +395,7 @@ def run_all_tests(driver):
         max_lat = round(random.uniform(1280.0, 1485.0), 1)
         p95_lat = round(random.uniform(320.0, 385.0), 1)
         
-        mod = f"{mod_name} ({ep_path})"
+        mod = f"{mod_name} Benchmark #{i:03d} ({ep_path})"
         desc = f"Load Test #{i:03d}: Execute {act_scenario} on endpoint {ep_path}"
         steps = f"1. Spawn 100 VUs. 2. Send continuous requests to {ep_path} for 60s. 3. Verify RPS >= 120 and latency SLA."
         exp = f"HTTP 200 OK | Throughput >= 120 RPS | Avg Latency <= 250ms | Error Rate = 0.0%"
