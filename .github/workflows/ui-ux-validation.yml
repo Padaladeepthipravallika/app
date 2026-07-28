@@ -1,0 +1,51 @@
+name: UI/UX & Unit Field Validation Test Suite (600+ Test Cases)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  ui-ux-unit-tests:
+    name: Run UI/UX, Unit & Field Validation Tests (600+ Cases)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r web_app/tests/requirements.txt
+
+      - name: Run 300 UI/UX & Accessibility Tests
+        run: |
+          python web_app/tests/run_ui_ux_tests.py
+
+      - name: Run 300 Unit & Field Validation Tests
+        run: |
+          python web_app/tests/run_unit_validation_tests.py
+
+      - name: Upload UI/UX Excel Test Report (.xlsx)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: UI_UX_Accessibility_Report_300_Cases
+          path: web_app/reports/UI_UX_Accessibility_Report.xlsx
+          retention-days: 90
+
+      - name: Upload Unit & Field Validation Excel Test Report (.xlsx)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Unit_Field_Validation_Report_300_Cases
+          path: web_app/reports/Unit_Field_Validation_Report.xlsx
+          retention-days: 90

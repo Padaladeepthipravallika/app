@@ -1,0 +1,51 @@
+name: Vulnerability Security Audit & Baseline Load Testing (600+ Metrics)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  security-and-load-tests:
+    name: Security SAST Audit & 100 VUs Load Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r web_app/tests/requirements.txt
+
+      - name: Run 300 Vulnerability & Security SAST Audits
+        run: |
+          python web_app/tests/run_security_tests.py
+
+      - name: Run 100 VU Baseline & API Load Tests (300 Metrics)
+        run: |
+          python web_app/tests/run_load_tests.py
+
+      - name: Upload Security Vulnerability Excel Report (.xlsx)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Vulnerability_Security_Report_300_Cases
+          path: web_app/reports/Vulnerability_Security_Report.xlsx
+          retention-days: 90
+
+      - name: Upload API Load Testing Excel Report (.xlsx)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: API_Load_Testing_Report_100_VUs
+          path: web_app/reports/API_Load_Testing_Report.xlsx
+          retention-days: 90
