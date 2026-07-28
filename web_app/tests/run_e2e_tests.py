@@ -360,7 +360,7 @@ def run_all_tests(driver):
         t0 = time.time()
         act = exp
         time_taken = time.time() - t0 + 0.002
-        results.append(TestResult(tc_id, "Baseline & API Load Testing", module, desc, steps, exp, act, time_taken, sev, status, "YES"))
+        results.append(TestResult(tc_id, "Load Testing", module, desc, steps, exp, act, time_taken, sev, status, "YES"))
 
     return results
 
@@ -462,7 +462,7 @@ def generate_excel_report(results, output_file):
         "Unit Testing",
         "Validation Testing",
         "Vulnerability & Security",
-        "Baseline & API Load Testing"
+        "Load Testing"
     ]
     
     for idx, cat in enumerate(categories, 11):
@@ -618,7 +618,7 @@ def write_github_step_summary(results):
         md.append(f"| **{cat}** | {stats['total']} | {stats['pass']} | {stats['fail']} | {pr:.1f}% | **{st}** |")
         
     md.append(f"| **TOTAL** | **{total_tests}** | **{total_passed}** | **{total_failed}** | **{pass_rate:.1f}%** | **PRODUCTION READY APPROVED** |\n")
-    md.append("### 📄 Baseline & Load Testing (100 Virtual Users Metric Summary)")
+    md.append("### 📄 Load Testing (100 Virtual Users Metric Summary)")
     md.append("- **Virtual Users (VUs)**: 100 Concurrent Virtual Users")
     md.append("- **Duration**: 1 Minute Continuous Run")
     md.append("- **Throughput (RPS)**: 120 to 135 req/sec")
