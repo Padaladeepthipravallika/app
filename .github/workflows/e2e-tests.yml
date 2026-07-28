@@ -1,21 +1,15 @@
-name: Selenium E2E Automated Test Suite & Excel Report (300+ Test Cases)
+name: Selenium E2E & Load Automated Test Suite (1,800 Test Cases)
 
 on:
   push:
     branches: [ main, master ]
-    paths:
-      - 'web_app/**'
-      - '.github/workflows/e2e-tests.yml'
   pull_request:
     branches: [ main, master ]
-    paths:
-      - 'web_app/**'
-      - '.github/workflows/e2e-tests.yml'
   workflow_dispatch:
 
 jobs:
   e2e-tests:
-    name: Run 300+ Selenium E2E Tests & Generate Excel Report
+    name: Run 1,800 E2E & Load Tests (300 per Category) & Generate Excel Report
     runs-on: ubuntu-latest
 
     steps:
@@ -35,7 +29,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r web_app/tests/requirements.txt
 
-      - name: Execute 300+ Selenium E2E Test Suite
+      - name: Execute 1,800 E2E & Load Test Suite
         run: |
           python web_app/tests/run_e2e_tests.py --headless
 
